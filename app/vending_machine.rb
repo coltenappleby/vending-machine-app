@@ -8,7 +8,7 @@ class VendingMachine
         # Cash is money in the vending machine
         # coins are money the user put into the machine
         # change is the money that is returned to the user
-        # attr_accessor :cash, :cash_total, :user_item, :user_coins
+
         @items = {
            Coca_Cola: {Price: 2.00, Quantity: 2},
            Sprite: {Price: 2.50, Quantity: 2},
@@ -17,14 +17,13 @@ class VendingMachine
            Water: {Price: 3.25, Quantity: 0}
         }
         @cash = {'$20.00' => 0, '$10.00' => 0, '$5.00' => 5, '$3.00'=> 5, '$2.00'=> 5, '$1.00'=> 5, '$0.50'=> 5, '$0.25'=> 5, '$0.10' => 0, '$0.05' => 0}
-        @cash_total = @cash.sum{|key, val| key.to_s.to_f * val} # 58.75
+        # @cash_total = @cash.sum{|key, val| key.to_s.to_f * val} # 58.75
 
         @user_item = nil
         @user_coins = []
         @user_coins_total = 0
 
         @change_to_be_returned = []
-        @change_total_to_be_returned = 0
     end
 
     ### All Items ###
@@ -59,7 +58,6 @@ class VendingMachine
         @user_coins_total += get_coin_value(coin_str)
         @user_coins << coin_str
         @cash[coin_str] +=1
-        @cash_total += get_coin_value(coin_str)
         if @user_coins_total >= price(@user_item)
            return price(@user_item) - @user_coins_total
         else 
@@ -67,6 +65,7 @@ class VendingMachine
         end
     end
 
+    # Enoungh_change? and check_curr_coin first path through took about 30 mins with initial puesdo-code. Refractor took about 10 mins
     def enough_change?
         amount_owed = @user_coins_total - price(@user_item)
         @cash.each do |coin, qty|
@@ -83,8 +82,6 @@ class VendingMachine
         coin_value = get_coin_value(current_coin)
         if coin_value <= amount_owed && @cash[current_coin] > 0
             @cash[current_coin] -= 1
-            @cash_total -= coin_value
-            @change_total_to_be_returned += coin_value
             @change_to_be_returned << current_coin
             amount_owed -= coin_value
             check_curr_coin(current_coin, amount_owed)
@@ -107,22 +104,17 @@ class VendingMachine
     def return_coins
         @change_to_be_returned.each do |coin|
             @cash[coin] += 1
-            @cash_total += get_coin_value(coin)
         end
 
         return @user_coins
     end
 
     #### Reset Machine for next purchase ####
-    def reset_machine ## Does not alter cash or items in the machine
+    def reset_machine # Does not alter cash or items in the machine
         @user_item = nil
         @user_coins = []
         @user_coins_total = 0
-
         @change_to_be_returned = []
-        @change_total_to_be_returned = 0
     end
 
 end
-
-machine1 = VendingMachine.new

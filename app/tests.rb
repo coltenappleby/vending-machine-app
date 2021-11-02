@@ -3,6 +3,9 @@ require 'test/unit'
 
 class TestMachine < Test::Unit::TestCase
 
+    # Most testing was done manually with binding.pry 
+    # These tests took 10 mins
+
     def test_big_decimal
         machine = VendingMachine.new
         # assert(false)

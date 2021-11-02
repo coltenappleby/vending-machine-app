@@ -21,7 +21,7 @@ class Interface
             puts "This item is out of stock. \n"
             select_item # start prompt over again
         else 
-            print "The item costs $#{"%.2f" % @machine.price(item)} \n"
+            print "The item costs $#{"%.2f" % @machine.price(item)} \n" 
             if @prompt.yes?("Would you like to purchase this item", convert: :bool)
                 @machine.update_user_item(item)
                 enter_coins
@@ -60,7 +60,6 @@ class Interface
     end
     
     #### End Transaction ####
-
     def return_change
         coins_returned = @machine.dispense_change
         if coins_returned.length > 0
